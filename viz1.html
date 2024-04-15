@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+
+    <!-- Create a div where the graph will take place -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: rgb(240, 217, 14);
+            color: black;
+            padding: 1px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .underline {
+            border-bottom: 1px solid paleturquoise;
+            /* margin-bottom: 1px; */
+        }
+
+        footer {
+            background-color:grey;
+            color: #fff;
+            padding: 1px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 30px;
+            
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>        
+        <div class="underline"></div>
+        <h1>Data Visuailization: Lab Exam</h1>
+        <div class="underline"></div>
+    </header>
+    <div id="bar_plot"></div>
+
+    <script>
+        var margin = { top: 30, right: 30, bottom: 70, left: 60 },
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3.select("#bar_plot")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+        // Parse the Data
+        d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv", function (data) {
+            // X axis
+            var x = d3.scaleBand()
+                .range([0, width])
+                .domain(data.map(function (d) { return d.Country; }))
+                .padding(0.2);
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
+
+            // Add Y axis
+            var y = d3.scaleLinear()
+                .domain([0, 13000])
+                .range([height, 0]);
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            // Bars
+            svg.selectAll("mybar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", function (d) { return x(d.Country); })
+                .attr("y", function (d) { return y(d.Value); })
+                .attr("width", x.bandwidth())
+                .attr("height", function (d) { return height - y(d.Value); })
+                .attr("fill", "#69b3a2")
+        })
+    </script>
+
+
+    <footer>
+        <p>© 2024 Nallasingu Jagankrishna ID: 2022101002</p>
+        <a href="https://github.com/krishnaNallasingu/DV_Lab_Exam">Github</a>
+        <a href="https://www.linkedin.com/in/jagankrishna-nallasingu-0725b4268/">LinkedIn</a>
+        <a href="https://www.youtube.com/channel/UCO-QHbPtILoExD_Z1qSC_Dw">YouTube</a>
+    </footer>
+</body>
+
+</html>
