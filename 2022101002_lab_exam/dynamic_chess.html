@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <!-- Load d3.js -->
+    <script src="http://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <title>Lab Exam Viz-2</title>
+
+    <!-- Create a div where the graph will take place -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: rgb(240, 217, 14);
+            color: black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .underline {
+            border-bottom: 1px solid paleturquoise;
+            /* margin-bottom: 1px; */
+        }
+
+        .visualization {
+            margin: 20px auto;
+            border: 2px solid #333;
+            /* Adjust border thickness */
+            padding: 20px;
+            width: 480px;
+            margin-bottom: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+        }
+
+
+
+        footer {
+            background-color: grey;
+            color: #fff;
+            padding: 1px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 30px;
+
+        }
+        .board {
+        display: flex;
+        flex-wrap: wrap;
+        width: 400px;
+        height: 400px;
+        border: 2px solid black;
+        position: relative;
+    }
+    .square {
+        width: 50px;
+        height: 50px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        position: relative;
+        transition: all 0.3s ease-in-out;
+    }
+    .white {
+        background-color: #f0d9b5;
+    }
+    .black {
+        background-color: #b58863;
+    }
+    .arrow {
+        position: absolute;
+        z-index: 1;
+        transition: all 1s ease-in-out;
+    }
+    .tooltip {
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .button-container {
+        margin-top: 20px;
+    }
+    .button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #45a049;
+    }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="underline"></div>
+        <h1>Data Visualization: Lab Exam => Dynamic Chess Visualization</h1>
+        <div class="underline"></div>
+    </header>
+    <div class="board" id="visualization">
+        <!-- Create the chessboard -->
+        <!-- 8 rows -->
+        <!-- 8 columns -->
+        <!-- Alternate between white and black squares -->
+        <!-- Add pieces to their starting positions -->
+        <!-- Unicode characters for chess pieces -->
+        <div class="square white" data-piece="Rook" data-position="a8">♖</div>
+        <div class="square black" data-piece="Knight" data-position="b8">♘</div>
+        <div class="square white" data-piece="Bishop" data-position="c8">♗</div>
+        <div class="square black" data-piece="Queen" data-position="d8">♕</div>
+        <div class="square white" data-piece="King" data-position="e8">♔</div>
+        <div class="square black" data-piece="Bishop" data-position="f8">♗</div>
+        <div class="square white" data-piece="Knight" data-position="g8">♘</div>
+        <div class="square black" data-piece="Rook" data-position="h8">♖</div>
+        <div class="square black" data-piece="Pawn" data-position="a7">♙</div>
+        <div class="square white" data-piece="Pawn" data-position="b7">♙</div>
+        <div class="square black" data-piece="Pawn" data-position="c7">♙</div>
+        <div class="square white" data-piece="Pawn" data-position="d7">♙</div>
+        <div class="square black" data-piece="Pawn" data-position="e7">♙</div>
+        <div class="square white" data-piece="Pawn" data-position="f7">♙</div>
+        <div class="square black" data-piece="Pawn" data-position="g7">♙</div>
+        <div class="square white" data-piece="Pawn" data-position="h7">♙</div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square black"></div>
+        <div class="square white"></div>
+        <div class="square white" data-piece="Pawn" data-position="a2">♟</div>
+        <div class="square black" data-piece="Pawn" data-position="b2">♟</div>
+        <div class="square white" data-piece="Pawn" data-position="c2">♟</div>
+        <div class="square black" data-piece="Pawn" data-position="d2">♟</div>
+        <div class="square white" data-piece="Pawn" data-position="e2">♟</div>
+        <div class="square black" data-piece="Pawn" data-position="f2">♟</div>
+        <div class="square white" data-piece="Pawn" data-position="g2">♟</div>
+        <div class="square black" data-piece="Pawn" data-position="h2">♟</div>
+        <div class="square black" data-piece="Rook" data-position="a1">♜</div>
+        <div class="square white" data-piece="Knight" data-position="b1">♞</div>
+        <div class="square black" data-piece="Bishop" data-position="c1">♝</div>
+        <div class="square white" data-piece="Queen" data-position="d1">♛</div>
+        <div class="square black" data-piece="King" data-position="e1">♚</div>
+        <div class="square white" data-piece="Bishop" data-position="f1">♝</div>
+        <div class="square black" data-piece="Knight" data-position="g1">♞</div>
+        <div class="square white" data-piece="Rook" data-position="h1">♜</div>
+        <!-- Tooltip element -->
+        <div class="tooltip"></div>
+        <!-- Arrow element -->
+        <div class="arrow"></div>
+    </div>
+    <div class="button-container">
+        <button class="button" onclick="movePieces()">Move</button>
+    </div>
+    <script>
+        // Get all squares
+        const squares = document.querySelectorAll('.square');
+        // Get tooltip element
+        const tooltip = document.querySelector('.tooltip');
+        // Get arrow element
+        const arrow = document.querySelector('.arrow');
+
+        // Add event listener for each square
+        squares.forEach(square => {
+            square.addEventListener('mouseover', function (event) {
+                const piece = square.dataset.piece;
+                const position = square.dataset.position;
+                tooltip.textContent = `${piece} at ${position}`;
+                tooltip.style.display = 'block';
+                tooltip.style.left = event.clientX + 'px';
+                tooltip.style.top = event.clientY + 'px';
+            });
+
+            square.addEventListener('mouseout', function () {
+                tooltip.style.display = 'none';
+            });
+        });
+
+        // Define the game plan
+        const moves = [
+            { piece: "Pawn", from: "g5", to: "e5" },
+            { piece: "Pawn", from: "b7", to: "d7" },
+            { piece: "Knight", from: "h2", to: "f3" },
+            { piece: "Pawn", from: "b6", to: "d6" },
+            { piece: "Queen", from: "h4", to: "d8" },
+            { piece: "King", from: "a5", to: "a5" } // No Move
+        ];
+
+        // Function to move the arrow
+        function moveArrow(from, to) {
+            const squareFrom = document.querySelector(`[data-position="${from}"]`);
+            const squareTo = document.querySelector(`[data-position="${to}"]`);
+            const fromRect = squareFrom.getBoundingClientRect();
+            const toRect = squareTo.getBoundingClientRect();
+
+            arrow.style.top = `${fromRect.top + fromRect.height / 2}px`;
+            arrow.style.left = `${fromRect.left + fromRect.width / 2}px`;
+            arrow.style.width = `${toRect.left - fromRect.left}px`;
+            arrow.style.transform = `translateX(${toRect.left - fromRect.left}px)`;
+        }
+
+        // Function to move all pieces according to the game plan
+        function movePieces() {
+            let index = 0;
+            const interval = setInterval(() => {
+                const move = moves[index];
+                moveArrow(move.from, move.to);
+                index++;
+                if (index >= moves.length) {
+                    clearInterval(interval);
+                }
+            }, 1000); // 1000ms = 1 second delay between moves
+        }
+    </script>
+    <img src="game1.png" alt="Dynamic pic" width="400" height="200">
+     <footer>
+        <p>© 2024 Nallasingu Jagankrishna [ ID: 2022101002 ]</p>
+        <a href="https://github.com/krishnaNallasingu/DV_Lab_Exam">Github</a>
+        <a href="https://www.linkedin.com/in/jagankrishna-nallasingu-0725b4268/">LinkedIn</a>
+        <a href="https://www.youtube.com/channel/UCO-QHbPtILoExD_Z1qSC_Dw">YouTube</a>
+    </footer>
+</body>
+
+</html>

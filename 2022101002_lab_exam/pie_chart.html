@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <title>Lab Exam Viz-1</title>
+
+    <!-- Create divs where the graphs will take place -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            background-image: url('your-image-url.jpg');
+            background-size: cover;
+            background-position: center;
+            padding-bottom: 60px;
+        }
+
+        .visualization {
+            margin: 10px auto;
+            /* Center the visualization */
+            border: 1px solid #333;
+            /* Add border around the visualization */
+            padding: 20px;
+            width: 750px;
+            /* Set width to prevent overlap */
+            margin-bottom: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+            height: 550px;
+        }
+
+        header {
+            background-color: rgb(240, 217, 14);
+            color: black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .underline {
+            border-bottom: 1px solid paleturquoise;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            background-color: grey;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 30px;
+        }
+
+        /* Tooltip CSS */
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Animation CSS */
+        .slice {
+            transition: transform 0.3s ease;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="underline"></div>
+        <h1>Data Visualization: Lab Exam => Visualization-1</h1>
+        <div class="underline"></div>
+    </header>
+
+    <div id="piechart" class="visualization"></div>
+
+    <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
+    <script>
+
+        // set the dimensions and margins of the graph
+        var width = 750
+            height = 550
+            margin = 40
+        
+        // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+        var radius = Math.min(width, height) / 2 - margin
+        
+        // append the svg object to the div called 'my_dataviz'
+        var svg = d3.select("#piechart")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+          .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        
+        // Create dummy data
+        var data = {0: 1, 1: 10, 2:100, 3:1000, 4:10000, 5:100000, 6:1000000}
+        
+        // set the color scale
+        var color = d3.scaleOrdinal()
+          .domain(data)
+          .range(d3.schemeSet2);
+        
+        // Compute the position of each group on the pie:
+        var pie = d3.pie()
+          .value(function(d) {return d.value; })
+        var data_ready = pie(d3.entries(data))
+        // Now I know that group A goes from 0 degrees to x degrees and so on.
+        
+        // shape helper to build arcs:
+        var arcGenerator = d3.arc()
+          .innerRadius(0)
+          .outerRadius(radius)
+        
+        // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+        svg
+          .selectAll('mySlices')
+          .data(data_ready)
+          .enter()
+          .append('path')
+            .attr('d', arcGenerator)
+            .attr('fill', function(d){ return(color(d.data.key)) })
+            .attr("stroke", "black")
+            .style("stroke-width", "2px")
+            .style("opacity", 0.7)
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html("Party: " + d.data.key + "<br/>Votes: " + d.data.value)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+        
+        // Now add the annotation. Use the centroid method to get the best coordinates
+        svg
+          .selectAll('mySlices')
+          .data(data_ready)
+          .enter()
+          .append('text')
+          .text(function(d){ return  "Party: " + d.data.key + ", Votes: " + d.data.value; })
+          .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+          .style("text-anchor", "middle")
+          .style("font-size", 12)
+        
+        var tooltip = d3.select("#piechart").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+        
+        </script>
+
+
+    <footer>
+        <p>© 2024 Nallasingu Jagankrishna [ ID: 2022101002 ]</p>
+        <a href="https://github.com/krishnaNallasingu/DV_Lab_Exam">Github</a>
+        <a href="https://www.linkedin.com/in/jagankrishna-nallasingu-0725b4268/">LinkedIn</a>
+        <a href="https://www.youtube.com/channel/UCO-QHbPtILoExD_Z1qSC_Dw">YouTube</a>
+    </footer>
+</body>
+
+</html>
