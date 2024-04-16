@@ -28,12 +28,13 @@
         .visualization {
             margin: 10px auto;
             /* Center the visualization */
-            border: 2px solid #333;
+            border: 1px solid #333;
             /* Add border around the visualization */
             padding: 20px;
             width: 480px;
             /* Set width to prevent overlap */
             margin-bottom: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
             /* height: 400px; */
         }
 
@@ -96,7 +97,7 @@
 <body>
     <header>
         <div class="underline"></div>
-        <h1>Data Visuailization: Lab Exam - Visualization-2</h1>
+        <h1>Data Visuailization: Lab Exam => Visualization-1</h1>
         <div class="underline"></div>
     </header>
     <div id="bar_plot" class="visualization"></div>
@@ -110,8 +111,8 @@
             bottom: 70,
             left: 60
         },
-            width = 400 - margin.left - margin.right,
-            height = 400 - margin.top - margin.bottom;
+            width = 500 - margin.left - margin.right,
+            height = 450 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
         var svg1 = d3.select("#bar_plot")
